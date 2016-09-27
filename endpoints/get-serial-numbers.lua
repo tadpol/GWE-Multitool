@@ -1,4 +1,4 @@
---#ENDPOINTS GET /v1/serialNumbers
+--#ENDPOINT GET /v1/serialNumbers
 
 local ret = Keystore.get{key='serialNumbers'}
 
