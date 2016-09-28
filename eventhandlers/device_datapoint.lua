@@ -18,13 +18,14 @@ Keystore.command{
 -- Instead append them to the KV logs.
 local gwe_fields = {'device_info', 'usage_report', 'update_interval', 'engine_report', 'engine_fetch'}
 if table.contains(gwe_fields, data.alias) then
+  local key = string.gsub(data.alias .. "." .. data.device_sn, '[^%w@.-]', '-')
   Keystore.command{
-    key = data.alias .. "." .. data.device_sn,
+    key = key,
     command = 'lpush',
     args = { data.value[2] }
   }
   Keystore.command{
-    key = data.alias .. "." .. data.device_sn,
+    key = key,
     command = 'ltrim',
     args = { 0, 20 }
   }
