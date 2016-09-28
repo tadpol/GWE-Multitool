@@ -9,13 +9,24 @@ if sn == nil or report == nil then
 		message = 'missing parameters'
 	}
 else
-	local key = report .. '.' .. sn
+	local key = string.gsub(report .. "." .. sn, '[^%w@.-]', '-')
 	local ret = Keystore.get{key=key}
 	if ret.value == nil then
 		response.code = 500
 		response.message = ret
 	else
-		response.message = ret.value
+		-- value should be an array or strings.
+		-- Try to decode json from string is they are json.
+		local exp = {}
+		for i,v in ipairs(ret.value) do
+			local ex, er = from_json(v)
+			if ex ~= nil then
+				exp[#exp + 1] = ex
+			else
+				exp[#exp + 1] = v
+			end
+		end
+		response.message = exp
 	end
 end
 
