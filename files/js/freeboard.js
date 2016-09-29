@@ -535,32 +535,19 @@ function FreeboardModel(datasourcePlugins, widgetPlugins, freeboardUI)
 	}
 
 	this.saveDashboardClicked = function(){
-		var target = $(event.currentTarget);
-		var siblingsShown = target.data('siblings-shown') || false;
-		if(!siblingsShown){
-			$(event.currentTarget).siblings('label').fadeIn('slow');
-		}else{
-			$(event.currentTarget).siblings('label').fadeOut('slow');
-		}
-		target.data('siblings-shown', !siblingsShown);
+		var dbstr = JSON.stringify(self.serialize())
+		$.ajax({
+			url: '/v1/dashboard',
+			type: 'POST',
+			contentType: 'application/json',
+			data: dbstr,
+
+			error: function(xhr, status, error){
+				console.log(error);
+			}
+		});
 	}
 
-	this.saveDashboard = function(_thisref, event)
-	{
-		var pretty = $(event.currentTarget).data('pretty');
-		var contentType = 'application/octet-stream';
-		var a = document.createElement('a');
-		if(pretty){
-			var blob = new Blob([JSON.stringify(self.serialize(), null, '\t')], {'type': contentType});
-		}else{
-			var blob = new Blob([JSON.stringify(self.serialize())], {'type': contentType});
-		}
-		document.body.appendChild(a);
-		a.href = window.URL.createObjectURL(blob);
-		a.download = "dashboard.json";
-		a.target="_self";
-		a.click();
-	}
 
 	this.addDatasource = function(datasource)
 	{
