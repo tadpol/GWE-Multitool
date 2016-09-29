@@ -1,8 +1,8 @@
 --#ENDPOINT GET /v1/data/{sn}
 -- Description: Get timeseries data for specific device
 -- Parameters: ?window=<number>
-local identifier = tostring(request.parameters.sn)
-local window = tostring(request.parameters.window) -- in minutes,if ?window=<number>
+local identifier = request.parameters.sn
+local window = request.parameters.window -- in minutes,if ?window=<number>
 
 if window == nil then window = '30' end
 
