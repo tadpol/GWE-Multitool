@@ -16,8 +16,7 @@ Keystore.command{
 -- If the alias is in [device_info, usage_report, update_interval, engine_report,
 -- engine_fetch] don't write to TS.
 -- Instead append them to the KV logs.
-local gwe_fields = {'device_info', 'usage_report', 'update_interval', 'engine_report', 'engine_fetch'}
-if table.contains(gwe_fields, data.alias) then
+if table.contains(GWE.Fields, data.alias) then
   local key = string.gsub(data.alias .. "." .. data.device_sn, '[^%w@.-]', '-')
   Keystore.command{
     key = key,
