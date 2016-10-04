@@ -1,4 +1,5 @@
 --#EVENT device datapoint
+-- luacheck: globals data (magic variable from Murano)
 
 -- Get the timestamp for this data.
 local stamped = nil
@@ -32,6 +33,7 @@ if table.contains(GWE.Fields, data.alias) then
   -- Now look at sensors_report,
 elseif data.alias == "sensors_report" then
   local values, err = from_json(data.value[2])
+  if err ~= nil then print("from_json err: " .. err) end
 
   if values ~= nil then
     local tags = {gwe = data.device_sn, sn = data.device_sn}
@@ -40,15 +42,15 @@ elseif data.alias == "sensors_report" then
       Keystore.command{
         key='serialNumbers',
         command = 'sadd',
-        args = { value.sn }
+        args = { values.sn }
       }
-      tags.sn = value.sn
-      value.sn = nil
+      tags.sn = values.sn
+      values.sn = nil
     end
 
     -- only numbers.
     local fields = {}
-    for k,v in pairs(value) do
+    for k,v in pairs(values) do
       if type(v) == 'number' then
         fields[k] = v
       end

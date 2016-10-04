@@ -1,6 +1,7 @@
 --#ENDPOINT GET /v1/dashboard
+-- luacheck: globals request response (magic variables from Murano)
 
-function injectDatasources(datasources)
+local function injectDatasources(datasources)
 	local ret = Keystore.get{key='serialNumbers'}
 	if ret.value == nil then
 		return datasources
@@ -8,9 +9,9 @@ function injectDatasources(datasources)
 
 	for _, sn in ipairs(ret.value) do
 		local name = 'GWE Info ' .. sn
-		local idx, ads = table.find(datasources, 'name', name)
+		local idx, _ = table.find(datasources, 'name', name)
 		if idx == nil then
-			ads = {
+			local ads = {
 				name = 'GWE Info ' .. sn,
 				type = 'JSON',
 				settings = {
@@ -24,9 +25,9 @@ function injectDatasources(datasources)
 		end
 
 		name = 'Data ' .. sn
-		idx, ads = table.find(datasources, 'name', name)
+		idx, _ = table.find(datasources, 'name', name)
 		if idx == nil then
-			ads = {
+			local ads = {
 				name = 'Data ' .. sn,
 				type = 'JSON',
 				settings = {

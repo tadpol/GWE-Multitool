@@ -1,3 +1,4 @@
+-- luacheck: ignore 122/table (This is all about modifying the table)
 
 ---
 -- Dump a table as a string; recursively

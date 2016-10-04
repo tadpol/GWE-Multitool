@@ -1,4 +1,5 @@
 --#ENDPOINT POST /v1/dashboard
+-- luacheck: globals request response (magic variables from Murano)
 -- Body is the JSON to save
 
 local db = request.body

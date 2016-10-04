@@ -1,4 +1,5 @@
 --#ENDPOINT GET /v1/data/{sn}
+-- luacheck: globals request response (magic variables from Murano)
 -- Description: Get timeseries data for specific device
 -- Parameters: ?window=<number>
 local identifier = request.parameters.sn

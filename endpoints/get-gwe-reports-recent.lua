@@ -1,4 +1,5 @@
 --#ENDPOINT GET /v1/report/{sn}
+-- luacheck: globals request response (magic variables from Murano)
 local sn = request.parameters.sn
 
 if sn == nil then
@@ -17,13 +18,12 @@ else
 			ret[report] = got
 		elseif got.value ~= nil then
 			-- Try to decode json from string is they are json.
-			local ex, er = from_json(got.value)
+			local ex, _ = from_json(got.value)
 			if ex ~= nil then
 				ret[report] = ex
 			else
 				ret[report] = got
 			end
-			--]]
 		else -- got.value is nil
 			ret[report] = {}
 		end

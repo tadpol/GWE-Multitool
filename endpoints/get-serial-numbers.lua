@@ -1,4 +1,5 @@
 --#ENDPOINT GET /v1/serialNumbers
+-- luacheck: globals request response (magic variables from Murano)
 
 local ret = Keystore.get{key='serialNumbers'}
 
