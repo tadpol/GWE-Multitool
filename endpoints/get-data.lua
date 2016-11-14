@@ -11,13 +11,18 @@ local qq = TSQ.q():from('data')
 qq:where_tag_is('sn', identifier)
 qq:where_time_ago(window .. 'm')
 qq:limit(5000)
+qq:orderby('time',false)
 
 if request.parameters.qr ~=nil then return tostring(qq) end
 local out = Timeseries.query{ epoch='ms', q = tostring(qq) }
 if request.parameters.raw ~= nil then return out end
 
 if out.results ~= nil and out.results[1].series ~= nil then
-  response.message = out.results[1].series
+  local result = {}
+  for _, row in TSQ.series_ipairs(out.results[1].series) do
+    result[#result + 1] = row
+  end
+  response.message = result
 else
   response.message = {}
 end
