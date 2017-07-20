@@ -1,4 +1,4 @@
---xEVENT device datapoint
+--#EVENT r1po61hj3qmhsckkw event
 -- luacheck: globals event (magic variable from Murano)
 
 -- Keep a set of devices (aka serial numbers)
