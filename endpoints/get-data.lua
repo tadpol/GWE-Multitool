@@ -7,24 +7,13 @@ local window = request.parameters.window -- in minutes,if ?window=<number>
 
 if window == nil then window = '30' end
 
-local qq = TSQ.q():from('data')
-qq:where_tag_is('sn', identifier)
-qq:where_time_ago(window .. 'm')
-qq:limit(5000)
-qq:orderby('time',false)
+local out = Tsdb.query{
+  tags={sn=identifier},
+  relative_start = '-' .. window .. 'm',
+  limit = 5000,
+  epoch = 'ms',
+}
 
-if request.parameters.qr ~=nil then return tostring(qq) end
-local out = Timeseries.query{ epoch='ms', q = tostring(qq) }
-if request.parameters.raw ~= nil then return out end
-
-if out.results ~= nil and out.results[1].series ~= nil then
-  local result = {}
-  for _, row in TSQ.series_ipairs(out.results[1].series) do
-    result[#result + 1] = row
-  end
-  response.message = result
-else
-  response.message = {}
-end
+return out
 
 -- vim: set et ai sw=2 ts=2 :

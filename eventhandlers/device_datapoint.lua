@@ -1,6 +1,8 @@
 --#EVENT device datapoint
 -- luacheck: globals data (magic variable from Murano)
 
+-- FIXME: rewrite as ADC data handler
+
 -- Get the timestamp for this data.
 local stamped = nil
 if data.api == "record" then
@@ -56,8 +58,10 @@ elseif data.alias == "sensors_report" then
       end
     end
 
-    Timeseries.write{
-      query = TSW.write('data', tags, fields, stamped)
+    Tsdb.write{
+      tags = tags,
+      metrics = fields,
+      ts = stamped
     }
   end
 
@@ -65,8 +69,10 @@ else
   -- Some new alias; assume it goes in TSDB.
   -- well, if it is a number.
   if type(data.value[2]) == 'number' then
-    Timeseries.write{
-      query = TSW.write('data', {sn=data.device_sn}, {[data.alias] = data.value[2]}, stamped)
+    Tsdb.write{
+      tags = {sn=data.device_sn},
+      metrics = { [data.alias] = data.value[2] },
+      ts = stamped
     }
   end
 end
