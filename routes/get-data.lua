@@ -7,9 +7,14 @@ local window = request.parameters.window -- in minutes,if ?window=<number>
 
 if window == nil then window = '30' end
 
+-- For now, grab all metrics and query them.  In future, can we be smarter about
+-- this?
+local metrics = Tsdb.listMetrics()
+
 local out = Tsdb.query{
   tags={sn=identifier},
   relative_start = '-' .. window .. 'm',
+  metrics=metrics.metrics,
   limit = 5000,
   epoch = 'ms',
 }

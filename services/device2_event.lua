@@ -62,8 +62,8 @@ for _, tsval in ipairs(event.payload) do
 					end
 					-- only numbers.
 					for k,v in pairs(jvals) do
-						if type(v) == 'number' then
-							toWrite.metrics[k] = v
+						if type(v) == 'number' or tostring(tonumber(v)) == v then
+							toWrite.metrics[k] = tonumber(v)
 						end
 					end
 				end
