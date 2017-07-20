@@ -28,5 +28,5 @@ murano syncup -V
 
 GWEMT uses a fork of [Freeboard](https://github.com/Freeboard/freeboard) that
 preloads datasources and does save/load of a dashboard.  The compiled output is in
-`assets/` and can be synced into Murano without changes.
+`files/` and can be synced into Murano without changes.
 
