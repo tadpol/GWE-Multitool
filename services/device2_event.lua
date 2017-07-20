@@ -3,9 +3,9 @@
 
 -- Keep a set of devices (aka serial numbers)
 Keystore.command{
-  key='serialNumbers',
-  command = 'sadd',
-  args = { event.identity }
+	key='serialNumbers',
+	command = 'sadd',
+	args = { event.identity }
 }
 
 if event['type'] ~= 'data_in' then
@@ -35,7 +35,7 @@ for _, tsval in ipairs(event.payload) do
 					command = 'ltrim',
 					args = { 0, 20 }
 				}
-				-- 
+				--
 			else
 				local toWrite = {
 					tags = { sn = event.identity },
@@ -50,7 +50,7 @@ for _, tsval in ipairs(event.payload) do
 						toWrite.metrics[alias] = value
 					else
 						toWrite.tags.gwe = event.identity
-						--  if there is a sn field, add that serial number too.
+						--	if there is a sn field, add that serial number too.
 						if jvals.sn ~= nil then
 							toWrite.tags.sn = jvals.sn
 							Keystore.command{
