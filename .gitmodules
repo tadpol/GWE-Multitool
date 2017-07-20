@@ -1,6 +1,3 @@
-[submodule "modules/TSQ"]
-	path = modules/TSQ
-	url = https://github.com/tadpol/TSQ.git
 [submodule "freeboard"]
 	path = freeboard
 	url = https://github.com/tadpol/freeboard.git
