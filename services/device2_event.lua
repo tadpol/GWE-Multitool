@@ -18,6 +18,22 @@ end
 -- All of this below is trying to be proactivily smart about grabbing who-knows-what
 -- and saving it to TSDB.
 --
+local function flatten_json(json, path, depth, metrics)
+	path = path or ''
+	metrics = metrics or {}
+	depth = (depth or 0) + 1
+	if type(json) == 'table' then
+		for k,v in pairs(json) do
+			metrics = flatten_json(v, path .. '.' .. tostring(k), depth, metrics)
+		end
+		return metrics
+	else
+		-- Store all the things in TSDB.
+		metrics[path] = json
+		return metrics
+	end
+end
+
 
 for _, tsval in ipairs(event.payload) do
 	local ts = tsval.timestamp
@@ -48,6 +64,7 @@ for _, tsval in ipairs(event.payload) do
 			else
 				local jvals, err = from_json(value)
 				if err ~= nil then
+					-- A string that is not JSON.
 					toWrite.metrics[alias] = value
 				else
 					toWrite.tags.gwe = event.identity
@@ -59,13 +76,10 @@ for _, tsval in ipairs(event.payload) do
 							command = 'sadd',
 							args = { jvals.sn }
 						}
+						jvals.sn = nil
 					end
-					-- only numbers.
-					for k,v in pairs(jvals) do
-						if type(v) == 'number' or tostring(tonumber(v)) == v then
-							toWrite.metrics[k] = tonumber(v)
-						end
-					end
+					-- flatten the JSON to key paths and values
+					toWrite.metrics = flatten_json(jvals, alias)
 				end
 			end
 			Tsdb.write(toWrite)
