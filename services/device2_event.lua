@@ -28,7 +28,10 @@ local function flatten_json(json, path, depth, metrics)
 		end
 		return metrics
 	else
-		-- Store all the things in TSDB.
+		-- Make numeric things numbers.
+		if type(json) == 'number' or tostring(tonumber(json)) == json then
+			metrics[path] = tonumber(json)
+		end
 		metrics[path] = json
 		return metrics
 	end
