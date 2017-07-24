@@ -18,6 +18,13 @@ end
 -- All of this below is trying to be proactivily smart about grabbing who-knows-what
 -- and saving it to TSDB.
 --
+--[======[
+local function is_array(o)
+	local mt = getmetatable(o)
+	local tp = (mt or {})['__type']
+	return tp == 'slice'
+end
+--]======]
 local function flatten_json(json, path, depth, metrics)
 	path = path or ''
 	metrics = metrics or {}
