@@ -1,4 +1,4 @@
---#EVENT r1po61hj3qmhsckkw event
+--#EVENT {product.id} event
 -- luacheck: globals event (magic variable from Murano)
 
 -- Keep a set of devices (aka serial numbers)

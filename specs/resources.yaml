@@ -1,0 +1,16 @@
+---
+usage_report:
+  format: string
+engine_report:
+  format: string
+device_info:
+  format: string
+engine_fetch:
+  format: string
+fetch_status:
+  format: string
+update_interval:
+  format: string
+sensors_report:
+  format: string
+
