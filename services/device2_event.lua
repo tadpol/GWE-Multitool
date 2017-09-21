@@ -60,7 +60,7 @@ for _, tsval in ipairs(event.payload) do
 			Keystore.command{
 				key = key,
 				command = 'ltrim',
-				args = { 0, 20 }
+				args = { 0, 10 }
 			}
 			--
 		else
@@ -92,6 +92,17 @@ for _, tsval in ipairs(event.payload) do
 					toWrite.metrics = flatten_json(jvals, alias)
 				end
 			end
+
+			-- Grab all the metrics for this sn, and save those to be looked up.
+			-- We do this because TSDB doesn't track that mapping.
+			local names = {}
+			for metric,_ in pairs(toWrite.metrics) do
+				table.insert(names, metric)
+			end
+			local key = string.gsub("_metric_names." .. toWrite.tags.sn, '[^%w@.-]', '-')
+			Keystore.command{ key=key, command = 'sadd', args = names }
+
+			-- Now write to Tsdb.
 			Tsdb.write(toWrite)
 		end
 	end

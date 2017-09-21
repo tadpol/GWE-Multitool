@@ -1,10 +1,13 @@
 ---
 usage_report:
   format: string
+  settable: false
 engine_report:
   format: string
+  settable: false
 device_info:
   format: string
+  settable: false
 engine_fetch:
   format: string
 fetch_status:

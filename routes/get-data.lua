@@ -4,13 +4,20 @@
 
 local identifier = request.parameters.sn
 
--- For now, grab all metrics and query them.  In future, can we be smarter about
--- this?
-local metrics = Tsdb.listMetrics()
+-- Grab saved metrics for this device. Or all of them if that fails.
+local metrics
+local key = string.gsub("_metric_names." .. identifier, '[^%w@.-]', '-')
+metrics = Keystore.get{key=key}
+if metrics.error ~= nil then
+  metrics = Tsdb.listMetrics()
+  metrics = metrics.metrics
+else
+  metrics = metrics.value
+end
 
 local out = Tsdb.query{
   tags={sn=identifier},
-  metrics=metrics.metrics,
+  metrics=metrics,
   limit = 100,
   epoch = 'ms',
 }
