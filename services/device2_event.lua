@@ -1,5 +1,6 @@
 --#EVENT {product.id} event
 -- luacheck: globals event (magic variable from Murano)
+-- luacheck: ignore 143/table
 
 -- Keep a set of devices (aka serial numbers)
 Keystore.command{
@@ -9,6 +10,7 @@ Keystore.command{
 }
 
 if event['type'] ~= 'data_in' then
+	print(event)
 	return
 end
 
@@ -31,7 +33,7 @@ local function flatten_json(json, path, depth, metrics)
 	depth = (depth or 0) + 1
 	if type(json) == 'table' then
 		for k,v in pairs(json) do
-			metrics = flatten_json(v, path .. '.' .. tostring(k), depth, metrics)
+			metrics = flatten_json(v, path .. '_' .. tostring(k), depth, metrics)
 		end
 		return metrics
 	else
@@ -47,9 +49,7 @@ end
 
 for _, tsval in ipairs(event.payload) do
 	local ts = tsval.timestamp
-	print(event.payload)
 	for alias, value in pairs(tsval.values) do
-		print("Looking at :" .. alias .. ": with :" .. value .. ":")
 		if table.contains(GWE.Fields, alias) then
 			local key = string.gsub(alias .. "." .. event.identity, '[^%w@.-]', '-')
 			Keystore.command{
